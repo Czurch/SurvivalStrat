@@ -5,12 +5,12 @@ using UnityEngine;
 public class TileSpace : MonoBehaviour
 {
     public bool isOccupied;
-    public GameObject occupant;
+    public List<Player> player_occupants;
     // Start is called before the first frame update
     void Start()
     {
         isOccupied = false;
-        occupant = null;
+        player_occupants = new List<Player>();
     }
 
     // Update is called once per frame
@@ -19,15 +19,18 @@ public class TileSpace : MonoBehaviour
         
     }
 
-    public void Bind(GameObject obj)
+    public void Bind(Player p)
     {
         isOccupied = true;
-        occupant = obj;
+        player_occupants.Add(p);
     }
 
-    public void Unbind()
+    public void Unbind(Player p)
     {
-        isOccupied = false;
-        occupant = null;
+        player_occupants.Remove(p);
+        if (player_occupants.Count == 0)
+        {
+            isOccupied = false;
+        }
     }
 }

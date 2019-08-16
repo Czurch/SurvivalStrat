@@ -25,6 +25,12 @@ public class Player : MonoBehaviour
     {
     }
 
+    public void AddSurvivor(Survivor s)
+    {
+        survivors.Add(s);
+        s.controlling_player = this;
+    }
+
     public void Hydrate()
     {
         foreach (Survivor s in survivors)

@@ -5,6 +5,7 @@ using UnityEngine;
 public class SnapToObject : MonoBehaviour
 {
     private GameObject snappedPiece;
+    private Player player;
     private bool snapped;
     private float t;
     public float snapSpeed;
@@ -12,6 +13,7 @@ public class SnapToObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameObject.GetComponent<Player>();
         snapped = false;
     }
 
@@ -22,7 +24,6 @@ public class SnapToObject : MonoBehaviour
         {
             if (snapped = true && Input.GetMouseButton(0) != true)
             {
-                Debug.Log(Input.GetMouseButton(0));
                 Vector3 tile_pos = snappedPiece.transform.position;
                 tile_pos.y = 0.4f;
                 gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, tile_pos, Time.deltaTime * snapSpeed);
@@ -40,26 +41,28 @@ public class SnapToObject : MonoBehaviour
             //make sure the tile isnt occupied
             if (!ts.isOccupied)
             {
+
                 //unpair from our previous tile
                 if (snappedPiece != null)
                 {
+                    Debug.Log("Unbinding from previous tile");
                     TileSpace old_tile = snappedPiece.GetComponent<TileSpace>();
-                    old_tile.Unbind();
+                    old_tile.Unbind(player);
                 }
                 //pair the object with the tile
                 Debug.Log(gameObject.name + " snapping to " + collider.gameObject.name);
                 snappedPiece = collider.gameObject;
                 snapped = true;
-                ts.Bind(gameObject);
+                ts.Bind(player);
 
             }
+            else { Debug.Log("tile space for " + collider.gameObject.name + " is occupied"); }
         }
     }
-    /*
+    
     void OnTriggerExit(Collider collider)
     {
-        snappedPiece = null;
-        snapped = false;
+        //snappedPiece = null;
+        //snapped = false;
     }
-    */
 }

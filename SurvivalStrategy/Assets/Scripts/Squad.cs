@@ -5,7 +5,9 @@ using UnityEngine;
 public class Squad : MonoBehaviour
 {
     List<Survivor> survivors;
-    int combat_score;
+    private int combat_score;
+
+    public Transform[] survivor_slot;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,15 +22,22 @@ public class Squad : MonoBehaviour
     }
 
     //this is called when a play is dropped onto the Squad container
-    void addSurvivor(Survivor s)
+    public Vector3 addSurvivor(Survivor s)
     {
-        survivors.Add(s);
-        combat_score += s.combat_score;
-        
+        if (survivors.Count > 3)
+        {
+            //squad is full
+        }
+        else
+        {
+            survivors.Add(s);
+            combat_score += s.combat_score;
+            return survivor_slot[survivors.Count - 1];
+        }
     }
 
     //this is called when the player is removed from the Squad container
-    void removeSurvivor(Survivor s)
+    public void removeSurvivor(Survivor s)
     {
         if (survivors.Contains(s))
         {
@@ -38,5 +47,10 @@ public class Squad : MonoBehaviour
         else {
             Debug.Log("Error: Selected Survivor was not found in Squad's List");
         }
+    }
+
+    public int getCombatScore()
+    {
+        return combat_score;
     }
 }
