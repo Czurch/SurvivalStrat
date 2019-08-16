@@ -22,6 +22,7 @@ public class Gamemanager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        numberOfPlayers = 2;
         stateMachine = GetComponent<Animator>();
         players = new Player[numberOfPlayers];
     }

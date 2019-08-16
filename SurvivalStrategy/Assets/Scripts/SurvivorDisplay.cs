@@ -7,17 +7,23 @@ public class SurvivorDisplay : MonoBehaviour
 {
     public Survivor survivor;
 
-    public TextMeshPro nameText;
-    public TextMeshPro descriptionText;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI descriptionText;
+    public TextMeshProUGUI healthText;
+    public TextMeshProUGUI combatText;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        nameText.text = survivor.name;
+        healthText.text = survivor.health.ToString();
+        combatText.text = survivor.combat_score.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        healthText.text = survivor.health.ToString();
+        combatText.text = survivor.combat_score.ToString();
     }
 }

@@ -24,4 +24,40 @@ public class Player : MonoBehaviour
     void Update()
     {
     }
+
+    public void Hydrate()
+    {
+        foreach (Survivor s in survivors)
+        {
+            if (s.isThirsty)
+            {
+                if (water != 0)
+                {
+                    water--;
+                }
+                else
+                {
+                    s.takeDamage();
+                }
+            } 
+        }
+    }
+
+    public void Feed()
+    {
+        foreach (Survivor s in survivors)
+        {
+            if (s.isHungry)
+            {
+                if (food != 0)
+                {
+                    food--;
+                }
+                else
+                {
+                    s.takeDamage();
+                }
+            }
+        }
+    }
 }

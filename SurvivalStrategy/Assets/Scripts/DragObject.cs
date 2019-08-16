@@ -4,26 +4,37 @@ using UnityEngine;
 
 public class DragObject : MonoBehaviour
 {
+    private Camera cam;
     private float distFromCamera;
     private Vector3 mouseOffset;
     private Collider mCollider;
+    private Plane objPlane;
+    private Vector3 objPoint;
 
     void Start()
     {
+        objPlane = new Plane(Vector3.up, gameObject.transform.position);
+        cam = Camera.main;
         mCollider = GetComponent<Collider>();
     }
+
+    void Update()
+    {
+        objPlane.ClosestPointOnPlane(gameObject.transform.position);
+    }
+
     void OnMouseDown()
     {
-        distFromCamera = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         mouseOffset = gameObject.transform.position - GetMouseWorldPosition();
     }
 
     private Vector3 GetMouseWorldPosition()
     {
+        distFromCamera = cam.WorldToScreenPoint(objPlane.ClosestPointOnPlane(gameObject.transform.position)).z;
         Vector3 mousePoint = Input.mousePosition;
         mousePoint.z = distFromCamera;
 
-        return Camera.main.ScreenToWorldPoint(mousePoint);
+        return cam.ScreenToWorldPoint(mousePoint);
     }
     void OnMouseDrag()
     {

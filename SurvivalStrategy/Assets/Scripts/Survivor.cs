@@ -12,11 +12,18 @@ public class Survivor : ScriptableObject
 
     public int health;
     public int combat_score;
+    public bool isThirsty;
+    public bool isHungry;
+    public bool isDead;
     public Item[] items;
+
     // Start is called before the first frame update
     void Start()
     {
         health = 3;
+        isThirsty = false;
+        isHungry = false;
+        isDead = false;
         items = new Item[2];
     }
 
@@ -24,5 +31,14 @@ public class Survivor : ScriptableObject
     void Update()
     {
         
+    }
+
+    public void takeDamage()
+    {
+        health--;
+        if (health <= 0)
+        {
+            isDead = true;
+        }
     }
 }
