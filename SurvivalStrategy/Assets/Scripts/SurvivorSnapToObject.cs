@@ -5,6 +5,7 @@ using UnityEngine;
 public class SurvivorSnapToObject : MonoBehaviour
 {
     private GameObject snappedPiece;
+    private Survivor survivor;
     private Player player;
     private bool snapped;
     private float t;
@@ -14,6 +15,7 @@ public class SurvivorSnapToObject : MonoBehaviour
     void Start()
     {
         gameObject.GetComponent<Player>();
+        gameObject.GetComponent<Survivor>();
         snapped = false;
     }
 
@@ -32,13 +34,13 @@ public class SurvivorSnapToObject : MonoBehaviour
     }
 
     //When we collide with a snappable Object we set our position to them
-    void OnTriggerEnter(Collider collider)
+    void OnTriggerEnter(Collider col)
     {
-        switch (collider.gameObject.tag)
+        switch (col.gameObject.tag)
         //IF TILESPACE
         {
             case "TileSpace":
-                TileSpace ts = collider.gameObject.GetComponent<TileSpace>();
+                TileSpace ts = col.gameObject.GetComponent<TileSpace>();
                 //make sure the tile isnt occupied
                 if (!ts.isOccupied)
                 {
@@ -51,16 +53,24 @@ public class SurvivorSnapToObject : MonoBehaviour
                         old_tile.Unbind(player);
                     }
                     //pair the object with the tile
-                    Debug.Log(gameObject.name + " snapping to " + collider.gameObject.name);
-                    snappedPiece = collider.gameObject;
+                    Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
+                    snappedPiece = col.gameObject;
                     snapped = true;
                     ts.Bind(player);
 
                 }
-                else { Debug.Log("tile space for " + collider.gameObject.name + " is occupied"); }
+                else { Debug.Log("tile space for " + col.gameObject.name + " is occupied"); }
                 break;
 
             case "Squad":
+                Squad s = col.gameObject.GetComponent<Squad>();
+                if (snappedPiece != null)
+                {
+                   //snappedPiece unbind
+                   snappedPiece = null;
+                }
+                snapped = true;
+                s.addSurvivor(survivor, gameObject.transform);
                 break;
 
             case "Bunk":

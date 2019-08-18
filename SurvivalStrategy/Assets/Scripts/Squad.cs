@@ -22,7 +22,7 @@ public class Squad : MonoBehaviour
     }
 
     //this is called when a play is dropped onto the Squad container
-    public Vector3 addSurvivor(Survivor s)
+    public void addSurvivor(Survivor s, Transform t)
     {
         if (survivors.Count > 3)
         {
@@ -32,7 +32,7 @@ public class Squad : MonoBehaviour
         {
             survivors.Add(s);
             combat_score += s.combat_score;
-            return survivor_slot[survivors.Count - 1];
+            t = survivor_slot[survivors.Count - 1];
         }
     }
 
