@@ -5,8 +5,10 @@ using UnityEngine;
 public class SurvivorSnapToObject : MonoBehaviour
 {
     private GameObject snappedPiece;
-    private Survivor survivor;
-    private Player player;
+    public SurvivorDisplay sd;
+    public TileSpace ts;
+    public TileSpace old_tile;
+    public Squad squad;
     private bool snapped;
     private float t;
     public float snapSpeed;
@@ -14,8 +16,7 @@ public class SurvivorSnapToObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.GetComponent<Player>();
-        gameObject.GetComponent<Survivor>();
+        //gameObject.GetComponent<SurvivorDisplay>();
         snapped = false;
     }
 
@@ -37,46 +38,83 @@ public class SurvivorSnapToObject : MonoBehaviour
     void OnTriggerEnter(Collider col)
     {
         switch (col.gameObject.tag)
-        //IF TILESPACE
         {
+            //IF TILESPACE
             case "TileSpace":
-                TileSpace ts = col.gameObject.GetComponent<TileSpace>();
+                ts = col.gameObject.GetComponent<TileSpace>();
                 //make sure the tile isnt occupied
                 if (!ts.isOccupied)
                 {
-
-                    //unpair from our previous tile
+                    //unpair from our previous object
                     if (snappedPiece != null)
                     {
-                        Debug.Log("Unbinding from previous tile");
-                        TileSpace old_tile = snappedPiece.GetComponent<TileSpace>();
-                        old_tile.Unbind(player);
+                        Unbind();
                     }
                     //pair the object with the tile
                     Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
                     snappedPiece = col.gameObject;
                     snapped = true;
-                    ts.Bind(player);
+                    ts.Bind(sd.controlling_player);
 
                 }
                 else { Debug.Log("tile space for " + col.gameObject.name + " is occupied"); }
                 break;
 
             case "Squad":
-                Squad s = col.gameObject.GetComponent<Squad>();
+                GameObject temp;        //holds our snappedPiece if we cant join the squad
+                squad = col.gameObject.GetComponent<Squad>();
+                Debug.Log("we are triggering on " + col.gameObject.name);
+                temp = snappedPiece;
+
                 if (snappedPiece != null)
                 {
-                   //snappedPiece unbind
-                   snappedPiece = null;
+                    Unbind();
                 }
-                snapped = true;
-                s.addSurvivor(survivor, gameObject.transform);
+
+                snappedPiece = squad.addSurvivor(sd.survivor);
+                if (snappedPiece != null)
+                {
+                    Debug.Log("snappedPiece was not null");
+                    snapped = true;
+                }
+                else
+                {
+                    //we didnt return a spot for the survivor, squad is full
+                    snappedPiece = temp;
+                    snapped = true;
+                }
                 break;
 
             case "Bunk":
                 break;
-        } 
+        }
 
 
     }
+
+    void Unbind()
+    {
+        switch (snappedPiece.tag)
+        {
+            case "TileSpace":
+                Debug.Log("Unbinding from previous tile");
+                old_tile = snappedPiece.GetComponent<TileSpace>();
+                old_tile.Unbind(sd.controlling_player);
+                snappedPiece = null;
+                snapped = false;
+                //set snappedPiece to player bunk
+                break;
+            case "Squad":
+                Debug.Log("Unbinding from squad");
+                squad.removeSurvivor(sd.survivor);
+                snappedPiece = null;
+                snapped = false;
+                //set snappedPiece back to player's bunk
+                break;
+            default:
+                Debug.Log(snappedPiece.tag);
+                break;
+        }
+    }
 }
+     

@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Survivor", menuName = "Survivor")]
 public class Survivor : ScriptableObject
 {
-    public Player controlling_player;
     public new string name;
     public string description;
 
@@ -22,6 +21,7 @@ public class Survivor : ScriptableObject
     void Start()
     {
         health = 3;
+        combat_score = 1;
         isThirsty = false;
         isHungry = false;
         isDead = false;
@@ -32,11 +32,6 @@ public class Survivor : ScriptableObject
     void Update()
     {
         
-    }
-
-    void BindToPlayer(Player p)
-    {
-        controlling_player = p;
     }
 
     public void takeDamage()

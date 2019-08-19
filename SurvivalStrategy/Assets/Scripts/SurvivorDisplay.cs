@@ -5,6 +5,7 @@ using TMPro;
 
 public class SurvivorDisplay : MonoBehaviour
 {
+    public Player controlling_player;
     public Survivor survivor;
 
     public TextMeshProUGUI nameText;
@@ -25,5 +26,10 @@ public class SurvivorDisplay : MonoBehaviour
     {
         healthText.text = survivor.health.ToString();
         combatText.text = survivor.combat_score.ToString();
+    }
+
+    void BindToPlayer(Player p)
+    {
+        controlling_player = p;
     }
 }

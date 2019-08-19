@@ -5,7 +5,6 @@ using UnityEngine;
 public class SnapToObject : MonoBehaviour
 {
     private GameObject snappedPiece;
-    private Player player;
     private bool snapped;
     private float t;
     public float snapSpeed;
@@ -15,6 +14,7 @@ public class SnapToObject : MonoBehaviour
     {
         gameObject.GetComponent<Player>();
         snapped = false;
+        snappedPiece = null;
     }
 
     // Update is called once per frame
@@ -37,26 +37,6 @@ public class SnapToObject : MonoBehaviour
         //check to see if the object is snappable
         if (collider.gameObject.tag == "Snappable")
         {
-            TileSpace ts = collider.gameObject.GetComponent<TileSpace>();
-            //make sure the tile isnt occupied
-            if (!ts.isOccupied)
-            {
-
-                //unpair from our previous tile
-                if (snappedPiece != null)
-                {
-                    Debug.Log("Unbinding from previous tile");
-                    TileSpace old_tile = snappedPiece.GetComponent<TileSpace>();
-                    old_tile.Unbind(player);
-                }
-                //pair the object with the tile
-                Debug.Log(gameObject.name + " snapping to " + collider.gameObject.name);
-                snappedPiece = collider.gameObject;
-                snapped = true;
-                ts.Bind(player);
-
-            }
-            else { Debug.Log("tile space for " + collider.gameObject.name + " is occupied"); }
         }
     }
     

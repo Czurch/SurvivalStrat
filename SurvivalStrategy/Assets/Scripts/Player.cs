@@ -25,10 +25,10 @@ public class Player : MonoBehaviour
     {
     }
 
-    public void AddSurvivor(Survivor s)
+    public void AddSurvivor(SurvivorDisplay sd)
     {
-        survivors.Add(s);
-        s.controlling_player = this;
+        survivors.Add(sd.survivor);
+        sd.controlling_player = this;
     }
 
     public void Hydrate()

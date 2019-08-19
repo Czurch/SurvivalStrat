@@ -7,7 +7,7 @@ public class Squad : MonoBehaviour
     List<Survivor> survivors;
     private int combat_score;
 
-    public Transform[] survivor_slot;
+    public GameObject[] survivor_slot;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,17 +22,19 @@ public class Squad : MonoBehaviour
     }
 
     //this is called when a play is dropped onto the Squad container
-    public void addSurvivor(Survivor s, Transform t)
+    public GameObject addSurvivor(Survivor s)
     {
         if (survivors.Count > 3)
         {
             //squad is full
+            return null;
         }
         else
         {
             survivors.Add(s);
             combat_score += s.combat_score;
-            t = survivor_slot[survivors.Count - 1];
+            Debug.Log("Squad Count:" + survivors.Count);
+            return survivor_slot[survivors.Count-1];
         }
     }
 
@@ -42,6 +44,7 @@ public class Squad : MonoBehaviour
         if (survivors.Contains(s))
         {
             survivors.Remove(s);
+            Debug.Log("Squad Count:" + survivors.Count);
             combat_score -= s.combat_score;
         }
         else {
