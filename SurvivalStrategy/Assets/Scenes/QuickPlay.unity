@@ -1648,16 +1648,6 @@ PrefabInstance:
       propertyPath: survivor_slot.Array.data[3]
       value: 
       objectReference: {fileID: 2058747829}
-    - target: {fileID: 3570967365782078945, guid: 8ec492ba9de78884d9e062c37291035c,
-        type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570967365782078945, guid: 8ec492ba9de78884d9e062c37291035c,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ec492ba9de78884d9e062c37291035c, type: 3}
 --- !u!1001 &6890070539607020810
