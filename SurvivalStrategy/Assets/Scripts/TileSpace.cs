@@ -6,6 +6,9 @@ public class TileSpace : MonoBehaviour
 {
     public bool isOccupied;
     public List<Player> player_occupants;
+    public GameObject[] slot_objects;
+    private Stack<GameObject> slots;
+
     // Start is called before the first frame update
     void Start()
     {

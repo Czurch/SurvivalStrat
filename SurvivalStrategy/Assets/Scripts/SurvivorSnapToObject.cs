@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SurvivorSnapToObject : MonoBehaviour
 {
-    private GameObject snappedPiece;
+    private GameObject slot_occupied;
     public SurvivorDisplay sd;
     public TileSpace ts;
     public TileSpace old_tile;
@@ -23,11 +23,11 @@ public class SurvivorSnapToObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (snappedPiece != null)
+        if (slot_occupied != null)
         {
             if (snapped = true && Input.GetMouseButton(0) != true)
             {
-                Vector3 tile_pos = snappedPiece.transform.position;
+                Vector3 tile_pos = slot_occupied.transform.position;
                 tile_pos.y = 0.4f;
                 gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, tile_pos, Time.deltaTime * snapSpeed);
             }
@@ -46,13 +46,13 @@ public class SurvivorSnapToObject : MonoBehaviour
                 if (!ts.isOccupied)
                 {
                     //unpair from our previous object
-                    if (snappedPiece != null)
+                    if (slot_occupied != null)
                     {
                         Unbind();
                     }
                     //pair the object with the tile
                     Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
-                    snappedPiece = col.gameObject;
+                    slot_occupied = col.gameObject;
                     snapped = true;
                     ts.Bind(sd.controlling_player);
 
@@ -61,26 +61,26 @@ public class SurvivorSnapToObject : MonoBehaviour
                 break;
 
             case "Squad":
-                GameObject temp;        //holds our snappedPiece if we cant join the squad
+                GameObject temp;        //holds our slot_occupied if we cant join the squad
                 squad = col.gameObject.GetComponent<Squad>();
                 Debug.Log("we are triggering on " + col.gameObject.name);
-                temp = snappedPiece;
+                temp = slot_occupied;
 
-                if (snappedPiece != null)
+                if (slot_occupied != null)
                 {
                     Unbind();
                 }
 
-                snappedPiece = squad.addSurvivor(sd.survivor);
-                if (snappedPiece != null)
+                slot_occupied = squad.addSurvivor(sd.survivor);
+                if (slot_occupied != null)
                 {
-                    Debug.Log("snappedPiece was not null");
+                    Debug.Log("slot_occupied was not null");
                     snapped = true;
                 }
                 else
                 {
                     //we didnt return a spot for the survivor, squad is full
-                    snappedPiece = temp;
+                    slot_occupied = temp;
                     snapped = true;
                 }
                 break;
@@ -94,25 +94,25 @@ public class SurvivorSnapToObject : MonoBehaviour
 
     void Unbind()
     {
-        switch (snappedPiece.tag)
+        switch (slot_occupied.tag)
         {
             case "TileSpace":
                 Debug.Log("Unbinding from previous tile");
-                old_tile = snappedPiece.GetComponent<TileSpace>();
+                old_tile = slot_occupied.GetComponent<TileSpace>();
                 old_tile.Unbind(sd.controlling_player);
-                snappedPiece = null;
+                slot_occupied = null;
                 snapped = false;
-                //set snappedPiece to player bunk
+                //set slot_occupied to player bunk
                 break;
             case "Squad":
                 Debug.Log("Unbinding from squad");
-                squad.removeSurvivor(sd.survivor);
-                snappedPiece = null;
+                squad.removeSurvivor(sd.survivor, slot_occupied);
+                slot_occupied = null;
                 snapped = false;
-                //set snappedPiece back to player's bunk
+                //set slot_occupied back to player's bunk
                 break;
             default:
-                Debug.Log(snappedPiece.tag);
+                Debug.Log(slot_occupied.tag);
                 break;
         }
     }

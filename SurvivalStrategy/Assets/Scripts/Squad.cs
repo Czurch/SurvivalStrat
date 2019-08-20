@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class Squad : MonoBehaviour
 {
+    private Player controlling_player;
     List<Survivor> survivors;
+    public GameObject[] slot_object;
+    private Stack<GameObject> survivor_slot;
     private int combat_score;
 
-    public GameObject[] survivor_slot;
+    
     // Start is called before the first frame update
     void Start()
     {
         survivors = new List<Survivor>();
+        survivor_slot = new Stack<GameObject>();
+        survivor_slot.Push(slot_object[0]);
+        survivor_slot.Push(slot_object[1]);
+        survivor_slot.Push(slot_object[2]);
+        survivor_slot.Push(slot_object[3]);
         combat_score = 0;
     }
 
@@ -27,6 +35,7 @@ public class Squad : MonoBehaviour
         if (survivors.Count > 3)
         {
             //squad is full
+            Debug.Log("Squad is Full");
             return null;
         }
         else
@@ -34,16 +43,17 @@ public class Squad : MonoBehaviour
             survivors.Add(s);
             combat_score += s.combat_score;
             Debug.Log("Squad Count:" + survivors.Count);
-            return survivor_slot[survivors.Count-1];
+            return survivor_slot.Pop();
         }
     }
 
     //this is called when the player is removed from the Squad container
-    public void removeSurvivor(Survivor s)
+    public void removeSurvivor(Survivor s, GameObject slot)
     {
         if (survivors.Contains(s))
         {
             survivors.Remove(s);
+            survivor_slot.Push(slot);
             Debug.Log("Squad Count:" + survivors.Count);
             combat_score -= s.combat_score;
         }
@@ -55,5 +65,15 @@ public class Squad : MonoBehaviour
     public int getCombatScore()
     {
         return combat_score;
+    }
+
+    public void setPlayer(Player p)
+    {
+        controlling_player = p;
+    }
+
+    public Player getPlayer()
+    {
+        return controlling_player;
     }
 }

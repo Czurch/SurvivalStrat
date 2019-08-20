@@ -984,6 +984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6331605e9732524caa4f9e05062f1a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlling_player: {fileID: 0}
   survivor: {fileID: 11400000, guid: 753e41a7a0cd64044811af28195032f1, type: 2}
   nameText: {fileID: 4518585693169065624}
   descriptionText: {fileID: 0}
@@ -1002,7 +1003,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sd: {fileID: 2597132484715778211}
-  snapSpeed: 3
+  ts: {fileID: 0}
+  old_tile: {fileID: 0}
+  squad: {fileID: 0}
+  snapSpeed: 10
 --- !u!114 &4752495292545151740
 MonoBehaviour:
   m_ObjectHideFlags: 0
