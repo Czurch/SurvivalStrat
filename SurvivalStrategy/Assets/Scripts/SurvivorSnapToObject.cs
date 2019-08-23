@@ -12,6 +12,8 @@ public class SurvivorSnapToObject : MonoBehaviour
     private bool snapped;
     private float t;
     public float snapSpeed;
+    private float distance_to_tile;
+    public float arcHeight;
 
     // Start is called before the first frame update
     void Start()
@@ -27,9 +29,18 @@ public class SurvivorSnapToObject : MonoBehaviour
         {
             if (snapped = true && Input.GetMouseButton(0) != true)
             {
+                Vector3 current_pos = gameObject.transform.position;
                 Vector3 tile_pos = slot_occupied.transform.position;
-                tile_pos.y = 0.4f;
-                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, tile_pos, Time.deltaTime * snapSpeed);
+                float current_distance = Vector3.Distance(gameObject.transform.position, tile_pos);
+                //Debug.Log(current_distance);
+                if (current_distance > 0.1)
+                {
+                    tile_pos.y = 0.4f;
+                    current_pos = Vector3.MoveTowards(gameObject.transform.position, tile_pos, Time.deltaTime * snapSpeed);
+                    current_pos.y = MovementFormula.parabolicArc(arcHeight, distance_to_tile, current_distance);
+                    Debug.Log(current_pos.y);
+                    gameObject.transform.position = current_pos;
+                }
             }
         }
     }
@@ -52,8 +63,7 @@ public class SurvivorSnapToObject : MonoBehaviour
                     }
                     //pair the object with the tile
                     Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
-                    slot_occupied = col.gameObject;
-                    snapped = true;
+                    Bind(col.gameObject);
                     ts.Bind(sd.controlling_player);
 
                 }
@@ -80,8 +90,7 @@ public class SurvivorSnapToObject : MonoBehaviour
                 else
                 {
                     //we didnt return a spot for the survivor, squad is full
-                    slot_occupied = temp;
-                    snapped = true;
+                    Bind(temp);
                 }
                 break;
 
@@ -90,6 +99,13 @@ public class SurvivorSnapToObject : MonoBehaviour
         }
 
 
+    }
+
+    void Bind(GameObject snap)
+    {
+        slot_occupied = snap;
+        distance_to_tile = Vector3.Distance(gameObject.transform.position, slot_occupied.transform.position);
+        snapped = true;
     }
 
     void Unbind()
@@ -115,6 +131,12 @@ public class SurvivorSnapToObject : MonoBehaviour
                 Debug.Log(slot_occupied.tag);
                 break;
         }
+    }
+
+    public void checkDistance()
+    {
+        distance_to_tile = Vector3.Distance(gameObject.transform.position, slot_occupied.transform.position);
+        Debug.Log("Distance to Tile is " + distance_to_tile);
     }
 }
      
