@@ -45,12 +45,5 @@ public class DragObject : MonoBehaviour
     void OnMouseUp()
     {
         mCollider.enabled = true;
-        switch (gameObject.tag)
-        {
-            case "Survivor":
-                SurvivorSnapToObject snap = gameObject.GetComponent<SurvivorSnapToObject>();
-                snap.checkDistance();
-                break;
-        }
     }
 }

@@ -1007,7 +1007,6 @@ MonoBehaviour:
   old_tile: {fileID: 0}
   squad: {fileID: 0}
   snapSpeed: 10
-  arcHeight: 0.5
 --- !u!114 &4752495292545151740
 MonoBehaviour:
   m_ObjectHideFlags: 0
