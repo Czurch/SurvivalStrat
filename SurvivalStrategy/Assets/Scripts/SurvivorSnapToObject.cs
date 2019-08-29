@@ -5,8 +5,8 @@ using UnityEngine;
 public class SurvivorSnapToObject : MonoBehaviour
 {
     private GameObject slot_occupied;
-    public SurvivorDisplay sd;
-    public TileSpace ts;
+    public SurvivorHolder holder;
+    public TileSpace current_tile;
     public TileSpace old_tile;
     public Squad squad;
     private bool snapped;
@@ -16,7 +16,6 @@ public class SurvivorSnapToObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //gameObject.GetComponent<SurvivorDisplay>();
         snapped = false;
     }
 
@@ -25,7 +24,7 @@ public class SurvivorSnapToObject : MonoBehaviour
     {
         if (slot_occupied != null)
         {
-            if (snapped = true && Input.GetMouseButton(0) != true)
+            if (snapped)
             {
                 Vector3 tile_pos = slot_occupied.transform.position;
                 tile_pos.y = 0.4f;
@@ -41,9 +40,10 @@ public class SurvivorSnapToObject : MonoBehaviour
         {
             //IF TILESPACE
             case "TileSpace":
-                ts = col.gameObject.GetComponent<TileSpace>();
+                current_tile = col.gameObject.GetComponent<TileSpace>();
+
                 //make sure the tile isnt occupied
-                if (!ts.isOccupied)
+                if (!current_tile.isOccupied)
                 {
                     //unpair from our previous object
                     if (slot_occupied != null)
@@ -54,7 +54,7 @@ public class SurvivorSnapToObject : MonoBehaviour
                     Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
                     slot_occupied = col.gameObject;
                     snapped = true;
-                    ts.Bind(sd.controlling_player);
+                    current_tile.Bind(holder.controlling_player);
 
                 }
                 else { Debug.Log("tile space for " + col.gameObject.name + " is occupied"); }
@@ -71,7 +71,7 @@ public class SurvivorSnapToObject : MonoBehaviour
                     Unbind();
                 }
 
-                slot_occupied = squad.addSurvivor(sd.survivor);
+                slot_occupied = squad.addSurvivor(holder.survivor);
                 if (slot_occupied != null)
                 {
                     Debug.Log("slot_occupied was not null");
@@ -99,14 +99,14 @@ public class SurvivorSnapToObject : MonoBehaviour
             case "TileSpace":
                 Debug.Log("Unbinding from previous tile");
                 old_tile = slot_occupied.GetComponent<TileSpace>();
-                old_tile.Unbind(sd.controlling_player);
+                old_tile.Unbind(holder.controlling_player);
                 slot_occupied = null;
                 snapped = false;
                 //set slot_occupied to player bunk
                 break;
             case "Squad":
                 Debug.Log("Unbinding from squad");
-                squad.removeSurvivor(sd.survivor, slot_occupied);
+                squad.removeSurvivor(holder.survivor, slot_occupied);
                 slot_occupied = null;
                 snapped = false;
                 //set slot_occupied back to player's bunk

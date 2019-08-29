@@ -933,7 +933,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4656933456038106996}
   - component: {fileID: 5990712801805157835}
-  - component: {fileID: 2597132484715778211}
+  - component: {fileID: 6171365789798309661}
   - component: {fileID: 8215077497656099933}
   - component: {fileID: 4752495292545151740}
   m_Layer: 0
@@ -972,7 +972,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.9074075, y: 3.200606, z: 2.781409}
   m_Center: {x: 0.038200457, y: -0.16926928, z: 0.00000038581123}
---- !u!114 &2597132484715778211
+--- !u!114 &6171365789798309661
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -981,15 +981,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5899992190486102953}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6331605e9732524caa4f9e05062f1a9, type: 3}
+  m_Script: {fileID: 11500000, guid: 4349f332e3b74de4a870bd7e592e2736, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   controlling_player: {fileID: 0}
   survivor: {fileID: 11400000, guid: 753e41a7a0cd64044811af28195032f1, type: 2}
-  nameText: {fileID: 4518585693169065624}
-  descriptionText: {fileID: 0}
-  healthText: {fileID: 2946930859294081409}
-  combatText: {fileID: 3504750254404478609}
+  name_text: {fileID: 4518585693169065624}
+  description_text: {fileID: 0}
+  health_text: {fileID: 2946930859294081409}
+  combat_text: {fileID: 3504750254404478609}
+  hunger_indicator: {fileID: 1031140703395703871}
 --- !u!114 &8215077497656099933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1002,7 +1003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdbbed9b41e93ab48a3a233e8cc76aa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sd: {fileID: 2597132484715778211}
+  holder: {fileID: 0}
   ts: {fileID: 0}
   old_tile: {fileID: 0}
   squad: {fileID: 0}
