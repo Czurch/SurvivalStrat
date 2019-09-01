@@ -6,6 +6,7 @@ public class SurvivorSnapToObject : MonoBehaviour
 {
     private GameObject slot_occupied;
     public SurvivorHolder holder;
+    private BoxCollider box_collider;
     public TileSpace current_tile;
     public TileSpace old_tile;
     public Squad squad;
@@ -16,6 +17,7 @@ public class SurvivorSnapToObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        box_collider = gameObject.GetComponent<BoxCollider>();
         snapped = false;
     }
 
@@ -28,7 +30,15 @@ public class SurvivorSnapToObject : MonoBehaviour
             {
                 Vector3 tile_pos = slot_occupied.transform.position;
                 tile_pos.y = 0.4f;
-                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, tile_pos, Time.deltaTime * snapSpeed);
+                if (gameObject.transform.position != tile_pos)
+                {
+                  box_collider.enabled = false;
+                  gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, tile_pos, Time.deltaTime * snapSpeed);
+                }
+                else
+                {
+                  box_collider.enabled = true;
+                }
             }
         }
     }

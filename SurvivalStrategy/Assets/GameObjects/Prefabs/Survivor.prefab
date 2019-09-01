@@ -938,7 +938,7 @@ GameObject:
   - component: {fileID: 4752495292545151740}
   m_Layer: 0
   m_Name: Survivor
-  m_TagString: Untagged
+  m_TagString: Survivor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1003,11 +1003,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdbbed9b41e93ab48a3a233e8cc76aa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holder: {fileID: 0}
-  ts: {fileID: 0}
+  holder: {fileID: 6171365789798309661}
+  current_tile: {fileID: 0}
   old_tile: {fileID: 0}
   squad: {fileID: 0}
-  snapSpeed: 10
+  snapSpeed: 20
 --- !u!114 &4752495292545151740
 MonoBehaviour:
   m_ObjectHideFlags: 0
