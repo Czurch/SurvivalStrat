@@ -8,6 +8,7 @@ public class SurvivorHolder : MonoBehaviour
 {
     public Player controlling_player;
     public Survivor survivor;
+    public Bunk bunk;
 
     public TextMeshProUGUI name_text;
     public TextMeshProUGUI description_text;

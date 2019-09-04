@@ -96,6 +96,16 @@ public class SurvivorSnapToObject : MonoBehaviour
                 break;
 
             case "Bunk":
+                holder.bunk = col.gameObject.GetComponent<Bunk>();
+                if (holder.bunk == null)
+                {
+                  //do nothing
+                }
+                else
+                {
+                  holder.bunk.Bind(holder);
+                  Debug.Log("Bound to Bunk!");
+                }
                 break;
         }
 
@@ -121,6 +131,9 @@ public class SurvivorSnapToObject : MonoBehaviour
                 snapped = false;
                 //set slot_occupied back to player's bunk
                 break;
+            case "Bunk":
+                holder.bunk.Unbind();
+              break;
             default:
                 Debug.Log(slot_occupied.tag);
                 break;
