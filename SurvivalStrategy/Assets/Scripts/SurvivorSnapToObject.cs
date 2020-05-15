@@ -10,7 +10,6 @@ public class SurvivorSnapToObject : MonoBehaviour
     public TileSpace current_tile;
     public TileSpace old_tile;
     public Squad squad;
-    private bool snapped;
     private float t;
     public float snapSpeed;
 
@@ -18,7 +17,6 @@ public class SurvivorSnapToObject : MonoBehaviour
     void Start()
     {
         box_collider = gameObject.GetComponent<BoxCollider>();
-        snapped = false;
     }
 
     // Update is called once per frame
@@ -26,19 +24,30 @@ public class SurvivorSnapToObject : MonoBehaviour
     {
         if (slot_occupied != null)
         {
-            if (snapped)
+            Vector3 tile_pos = slot_occupied.transform.position;
+            tile_pos.y = 0.4f;
+            if (gameObject.transform.position != tile_pos)
             {
-                Vector3 tile_pos = slot_occupied.transform.position;
-                tile_pos.y = 0.4f;
-                if (gameObject.transform.position != tile_pos)
-                {
-                  box_collider.enabled = false;
-                  gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, tile_pos, Time.deltaTime * snapSpeed);
-                }
-                else
-                {
-                  box_collider.enabled = true;
-                }
+                box_collider.enabled = false;
+                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, tile_pos, Time.deltaTime * snapSpeed);
+            }
+            else
+            {
+                box_collider.enabled = true;
+            }
+        }
+        else if (holder.survivor.bunk != null)
+        {
+            Vector3 bunk_pos = holder.survivor.bunk.transform.position;
+            bunk_pos.y = 0.4f;
+            if (gameObject.transform.position != bunk_pos)
+            {
+                box_collider.enabled = false;
+                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, bunk_pos, Time.deltaTime * snapSpeed);
+            }
+            else
+            {
+                box_collider.enabled = true;
             }
         }
     }
@@ -63,8 +72,7 @@ public class SurvivorSnapToObject : MonoBehaviour
                     //pair the object with the tile
                     Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
                     slot_occupied = col.gameObject;
-                    snapped = true;
-                    current_tile.Bind(holder.controlling_player);
+                    current_tile.Bind(holder.survivor.controlling_player);
 
                 }
                 else { Debug.Log("tile space for " + col.gameObject.name + " is occupied"); }
@@ -85,31 +93,49 @@ public class SurvivorSnapToObject : MonoBehaviour
                 if (slot_occupied != null)
                 {
                     Debug.Log("slot_occupied was not null");
-                    snapped = true;
                 }
                 else
                 {
                     //we didnt return a spot for the survivor, squad is full
                     slot_occupied = temp;
-                    snapped = true;
                 }
                 break;
 
             case "Bunk":
-                holder.bunk = col.gameObject.GetComponent<Bunk>();
-                if (holder.bunk == null)
+                holder.survivor.bunk = col.gameObject.GetComponent<Bunk>();
+                if (holder.survivor.bunk == null)
                 {
                   //do nothing
                 }
                 else
                 {
-                  holder.bunk.Bind(holder);
+                  holder.survivor.bunk.Bind(holder.survivor);
                   Debug.Log("Bound to Bunk!");
                 }
                 break;
         }
 
 
+    }
+
+    private void OnTriggerExit(Collider col)
+    {
+        Debug.Log("Trigger Exit");
+        switch (col.gameObject.tag)
+        {
+            //IF TILESPACE
+            case "TileSpace":
+                Unbind();
+                break;
+
+            case "Squad":
+                Unbind();
+                break;
+
+            case "Bunk":
+            default:
+                break;
+        }
     }
 
     void Unbind()
@@ -119,20 +145,18 @@ public class SurvivorSnapToObject : MonoBehaviour
             case "TileSpace":
                 Debug.Log("Unbinding from previous tile");
                 old_tile = slot_occupied.GetComponent<TileSpace>();
-                old_tile.Unbind(holder.controlling_player);
+                old_tile.Unbind(holder.survivor.controlling_player);
                 slot_occupied = null;
-                snapped = false;
                 //set slot_occupied to player bunk
                 break;
             case "Squad":
                 Debug.Log("Unbinding from squad");
                 squad.removeSurvivor(holder.survivor, slot_occupied);
                 slot_occupied = null;
-                snapped = false;
                 //set slot_occupied back to player's bunk
                 break;
             case "Bunk":
-                holder.bunk.Unbind();
+                holder.survivor.bunk.Unbind();
               break;
             default:
                 Debug.Log(slot_occupied.tag);

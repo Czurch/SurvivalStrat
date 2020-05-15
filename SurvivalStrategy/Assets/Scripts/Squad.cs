@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Squad : MonoBehaviour
 {
+    public int max_squad_members;
     private Player controlling_player;
     List<Survivor> survivors;
     public GameObject[] slot_object;
@@ -14,6 +15,7 @@ public class Squad : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        max_squad_members = 3;
         survivors = new List<Survivor>();
         survivor_slot = new Stack<GameObject>();
         survivor_slot.Push(slot_object[0]);
@@ -32,7 +34,7 @@ public class Squad : MonoBehaviour
     //this is called when a play is dropped onto the Squad container
     public GameObject addSurvivor(Survivor s)
     {
-        if (survivors.Count > 3)
+        if (survivors.Count > (slot_object.Length - 1))
         {
             //squad is full
             Debug.Log("Squad is Full");

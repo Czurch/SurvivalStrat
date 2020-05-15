@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public GameObject compound;
+    int player_index;
+    private Compound compound;
     public bool isDead;
 
     public int water;
@@ -12,76 +14,104 @@ public class Player : MonoBehaviour
     public int scrap;
 
     public List<Survivor> survivors;
-    public Stack<Bunk> bunks_available;
-    public Stack<Bunk> bunks_occupied;
-
+    private 
     // Start is called before the first frame update
     void Start()
     {
+        compound = gameObject.GetComponentInChildren<Compound>();
         survivors = new List<Survivor>();
-        bunks_available = new Stack<Bunk>();
-        bunks_occupied = new Stack<Bunk>();
+
         water = 15;
         food = 15;
         scrap = 0;
     }
 
     //Assigns a Survivor to a bunk and adds him to the player's control
-    public void AddSurvivor(SurvivorHolder holder)
+    public void AddSurvivor(Survivor s)
     {
-        if (bunks_available.Count != 0)
+        survivors.Add(s);
+        Scorekeeper.SK.UpdatePlayerText(this);
+
+        if (compound.bunks_available.Count != 0)
         {
-          Bunk bunk = bunks_available.Pop();
-          bunk.Bind(holder);
-          bunks_occupied.Push(bunk);
-          survivors.Add(holder.survivor);
-          holder.controlling_player = this;
+          Bunk bunk = compound.bunks_available.Pop();
+          bunk.Bind(s);
+          compound.bunks_occupied.Push(bunk);
+          //survivors.Add(holder.survivor);
+          //holder.controlling_player = this;
         }
     }
 
-    //Instantiates a new bunk in the compound
-    public void AddBunk()
+    public void RemoveSurvivor(Survivor s)
     {
-        Bunk bunk = new Bunk();
-        bunk.CreateNewBunk(gameObject.transform.position, gameObject.transform.rotation);
-        bunks_available.Push(bunk);
+
+        survivors.Remove(s);
+        if (survivors.Count <= 0)
+        {
+            isDead = true;
+            Scorekeeper.SK.CheckGameStatus();
+        }
+        Scorekeeper.SK.UpdatePlayerText(this);
     }
 
     //Uses water resources each round to keep characters alive
     public void Hydrate()
     {
-        foreach (Survivor s in survivors)
+        for (int ix = 0; ix < survivors.Count; ix++)
         {
-            if (s.isThirsty)
+            Survivor[] list = survivors.ToArray<Survivor>();
+            if (list[ix].isHungry)
             {
-                if (water != 0)
+                if (water >= 0)
                 {
                     water--;
+                    Debug.Log("feeding " + list[ix].name);
                 }
                 else
                 {
-                    s.takeDamage();
+                    list[ix].takeDamage();
+                    if(list[ix].isDead)
+                    {
+                        RemoveSurvivor(list[ix]);
+                    }
+                    
                 }
-            } 
+            }
         }
     }
 
     //Uses food resources to keep hungry characters alive
     public void Feed()
     {
-        foreach (Survivor s in survivors)
+        for (int ix = 0; ix < survivors.Count; ix++)
         {
-            if (s.isHungry)
+            Survivor[] list = survivors.ToArray<Survivor>();
+            if (list[ix].isHungry)
             {
-                if (food != 0)
+                if (food >= 0)
                 {
                     food--;
+                    Debug.Log("feeding " + list[ix].name);
                 }
                 else
                 {
-                    s.takeDamage();
+                    list[ix].takeDamage();
+                    if (list[ix].isDead)
+                    {
+                        RemoveSurvivor(list[ix]);
+                    }
                 }
             }
+        }
+
+    }
+
+    public void BuyBunk()
+    {
+        if(scrap >= 10)
+        { 
+            scrap -= 10;
+            compound.AddBunk();
         }
     }
 }

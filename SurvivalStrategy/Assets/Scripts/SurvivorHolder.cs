@@ -6,9 +6,8 @@ using TMPro;
 
 public class SurvivorHolder : MonoBehaviour
 {
-    public Player controlling_player;
+    
     public Survivor survivor;
-    public Bunk bunk;
 
     public TextMeshProUGUI name_text;
     public TextMeshProUGUI description_text;
@@ -30,11 +29,6 @@ public class SurvivorHolder : MonoBehaviour
         //this is inefficient dont call this every frame
         health_text.text = survivor.health.ToString();
         combat_text.text = survivor.combat_score.ToString();
-    }
-
-    void BindToPlayer(Player p)
-    {
-        controlling_player = p;
     }
 
     public void UpdateUI()

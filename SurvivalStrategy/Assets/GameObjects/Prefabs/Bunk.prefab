@@ -151,5 +151,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add8692e190b54664b428fe8370aebfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bunk_prefab: {fileID: 948097264577309868}
   isOccupied: 0
   occupant: {fileID: 0}
