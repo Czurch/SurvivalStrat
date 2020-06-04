@@ -1,53 +1,64 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build;
 using UnityEngine;
 
 public class SurvivorSnapToObject : MonoBehaviour
 {
-    private GameObject slot_occupied;
     public SurvivorHolder holder;
     private BoxCollider box_collider;
+    private GameObject slot_occupied;
+    private GameObject bunk_occupied;
     public TileSpace current_tile;
     public TileSpace old_tile;
     public Squad squad;
-    private float t;
     public float snapSpeed;
 
+    private DragObject drag;
+    private IEnumerator moveRoutine;
     // Start is called before the first frame update
     void Start()
     {
+        snapSpeed = 20;
+        holder = gameObject.GetComponent<SurvivorHolder>();
         box_collider = gameObject.GetComponent<BoxCollider>();
+        drag = gameObject.GetComponent<DragObject>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (slot_occupied != null)
+        if (!drag.isDragging)
         {
-            Vector3 tile_pos = slot_occupied.transform.position;
-            tile_pos.y = 0.4f;
-            if (gameObject.transform.position != tile_pos)
+            if (slot_occupied != null)
             {
-                box_collider.enabled = false;
-                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, tile_pos, Time.deltaTime * snapSpeed);
+                Vector3 tile_pos = slot_occupied.transform.position;
+                tile_pos.y = 0.4f;
+                if (moveRoutine == null)
+                {   
+                    moveRoutine = MovementRoutine(tile_pos);
+                    StartCoroutine(moveRoutine);
+                }
             }
-            else
+            else if (holder.bunk_occupied != null)
             {
-                box_collider.enabled = true;
+                Vector3 bunk_pos = holder.bunk_occupied.gameObject.transform.position;
+                bunk_pos.y = 0.4f;
+
+                if (moveRoutine == null)
+                {
+                    Debug.Log("moveRoutine is null");
+                    moveRoutine = MovementRoutine(bunk_pos);
+                    StartCoroutine(moveRoutine);
+                }
             }
         }
-        else if (holder.survivor.bunk != null)
+        else 
         {
-            Vector3 bunk_pos = holder.survivor.bunk.transform.position;
-            bunk_pos.y = 0.4f;
-            if (gameObject.transform.position != bunk_pos)
+            if (moveRoutine != null)
             {
-                box_collider.enabled = false;
-                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, bunk_pos, Time.deltaTime * snapSpeed);
-            }
-            else
-            {
-                box_collider.enabled = true;
+                StopCoroutine(moveRoutine);
+                moveRoutine = null;
             }
         }
     }
@@ -55,6 +66,7 @@ public class SurvivorSnapToObject : MonoBehaviour
     //When we collide with a snappable Object we set our position to them
     void OnTriggerEnter(Collider col)
     {
+        Debug.Log("Trigger Entered");
         switch (col.gameObject.tag)
         {
             //IF TILESPACE
@@ -73,7 +85,6 @@ public class SurvivorSnapToObject : MonoBehaviour
                     Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
                     slot_occupied = col.gameObject;
                     current_tile.Bind(holder.survivor.controlling_player);
-
                 }
                 else { Debug.Log("tile space for " + col.gameObject.name + " is occupied"); }
                 break;
@@ -86,7 +97,7 @@ public class SurvivorSnapToObject : MonoBehaviour
 
                 if (slot_occupied != null)
                 {
-                    Unbind();
+                    break;
                 }
 
                 slot_occupied = squad.addSurvivor(holder.survivor);
@@ -102,15 +113,15 @@ public class SurvivorSnapToObject : MonoBehaviour
                 break;
 
             case "Bunk":
-                holder.survivor.bunk = col.gameObject.GetComponent<Bunk>();
-                if (holder.survivor.bunk == null)
+                if (holder.bunk_occupied != null)
                 {
                   //do nothing
                 }
                 else
                 {
-                  holder.survivor.bunk.Bind(holder.survivor);
-                  Debug.Log("Bound to Bunk!");
+                    holder.bunk_occupied = col.gameObject.GetComponent<Bunk>();
+                    holder.bunk_occupied.Bind(holder.survivor);
+                    Debug.Log("Bound to Bunk!");
                 }
                 break;
         }
@@ -156,12 +167,24 @@ public class SurvivorSnapToObject : MonoBehaviour
                 //set slot_occupied back to player's bunk
                 break;
             case "Bunk":
-                holder.survivor.bunk.Unbind();
+                holder.bunk_occupied.Unbind();
               break;
             default:
                 Debug.Log(slot_occupied.tag);
                 break;
         }
+    }
+
+    public IEnumerator MovementRoutine(Vector3 moveTo)
+    {
+        while (gameObject.transform.position != moveTo)
+        {
+            box_collider.enabled = false;
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, moveTo, Time.deltaTime * snapSpeed);
+            yield return null;
+        }
+        box_collider.enabled = true;
+        yield return new WaitForSeconds(0.1f);
     }
 }
      

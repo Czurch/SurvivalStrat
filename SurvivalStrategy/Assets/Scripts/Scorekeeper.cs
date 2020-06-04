@@ -31,9 +31,9 @@ public class Scorekeeper : MonoBehaviour
     void Start()
     {
         player_count = 4;
-        for (int i = 0; i < player_count; i++)
+        for (int i = 0; i < player_count * 3; i++)
         {
-            spawner.SpawnSurvivors();
+            spawner.SpawnSurvivor();
         }   
     }
 
@@ -41,26 +41,6 @@ public class Scorekeeper : MonoBehaviour
     void Update()
     {
         
-    }
-    public void AddSurvivor(int player_ix)
-    {
-        Survivor s = ScriptableObject.CreateInstance<Survivor>();
-        s.SetStats("Gary", 3, 1);
-        player[player_ix].AddSurvivor(s);
-        Debug.Log("Player " + (player_ix+1) + " +1  = " + player[player_ix].survivors.Count);
-        //SK.UpdatePlayerText(player[player_ix]);
-    }
-
-    public void RemoveSurvivor(int player_ix)
-    {
-        int count = player[player_ix].survivors.Count;
-        player[player_ix].RemoveSurvivor(player[player_ix].survivors.ElementAt(count - 1));
-        Debug.Log("Player " + (player_ix+1) + " -1  = " + player[player_ix].survivors.Count);
-        if (player[player_ix].isDead)
-        {
-            CheckGameStatus();
-        }
-        //SK.UpdatePlayerText(player[player_ix]);
     }
 
     public void UpdatePlayerText(Player p)

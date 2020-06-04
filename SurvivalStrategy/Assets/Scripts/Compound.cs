@@ -10,10 +10,12 @@ public class Compound : MonoBehaviour
     private Stack<GameObject> bunk_slot;
     public Stack<Bunk> bunks_available;
     public Stack<Bunk> bunks_occupied;
+    public Player controlling_player;
 
     // Start is called before the first frame update
     void Start()
     {
+        controlling_player = gameObject.GetComponentInParent<Player>();
         bunks_available = new Stack<Bunk>();
         bunks_occupied = new Stack<Bunk>();
         bunk_slot = new Stack<GameObject>();
@@ -41,6 +43,7 @@ public class Compound : MonoBehaviour
     public void AddBunk()
     {
         GameObject bunkObj = Instantiate(bunkPrefab, bunk_slot.Pop().transform.position, gameObject.transform.rotation);
+        bunkObj.transform.SetParent(gameObject.transform);
         bunks_available.Push(bunkObj.GetComponent<Bunk>());
     }
 }

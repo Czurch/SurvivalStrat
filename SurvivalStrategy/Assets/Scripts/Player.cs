@@ -30,28 +30,28 @@ public class Player : MonoBehaviour
     public void AddSurvivor(Survivor s)
     {
         survivors.Add(s);
-        Scorekeeper.SK.UpdatePlayerText(this);
+        Gamemanager.GM.UpdatePlayerText(this);
 
         if (compound.bunks_available.Count != 0)
         {
           Bunk bunk = compound.bunks_available.Pop();
-          bunk.Bind(s);
           compound.bunks_occupied.Push(bunk);
           //survivors.Add(holder.survivor);
           //holder.controlling_player = this;
         }
+        Gamemanager.GM.DS.PickCharacter();
     }
 
     public void RemoveSurvivor(Survivor s)
     {
-
+        s.bunk.Unbind();
         survivors.Remove(s);
         if (survivors.Count <= 0)
         {
             isDead = true;
-            Scorekeeper.SK.CheckGameStatus();
+            Gamemanager.GM.CheckGameStatus();
         }
-        Scorekeeper.SK.UpdatePlayerText(this);
+        Gamemanager.GM.UpdatePlayerText(this);
     }
 
     //Uses water resources each round to keep characters alive
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
             Survivor[] list = survivors.ToArray<Survivor>();
             if (list[ix].isHungry)
             {
-                if (water >= 0)
+                if (water > 0)
                 {
                     water--;
                     Debug.Log("feeding " + list[ix].name);
@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
             Survivor[] list = survivors.ToArray<Survivor>();
             if (list[ix].isHungry)
             {
-                if (food >= 0)
+                if (food > 0)
                 {
                     food--;
                     Debug.Log("feeding " + list[ix].name);

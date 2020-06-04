@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Survivor", menuName = "Survivor")]
-public class Survivor : ScriptableObject
+public class Survivor : MonoBehaviour
 {
     public new string name;
     public string description;
     public Sprite artwork;
 
+    public int max_health;
     public int health;
     public int combat_score;
     public bool isThirsty;
@@ -32,7 +32,7 @@ public class Survivor : ScriptableObject
     // Start is called before the first frame update
     void Start()
     {
-        health = 3;
+        health = max_health;
         combat_score = 1;
         isThirsty = true;
         isHungry = true;
@@ -52,7 +52,7 @@ public class Survivor : ScriptableObject
         if (health <= 0)
         {
             isDead = true;
-            Debug.Log(name + "has died... Rest in Peace");
+            Debug.Log(name + " has died... Rest in Peace");
         }
     }
 
@@ -61,7 +61,7 @@ public class Survivor : ScriptableObject
         isHungry = true;
     }
 
-    void BindToPlayer(Player p)
+    public void BindToPlayer(Player p)
     {
         controlling_player = p;
     }

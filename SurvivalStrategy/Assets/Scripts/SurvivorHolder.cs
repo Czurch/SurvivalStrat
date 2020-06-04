@@ -15,9 +15,13 @@ public class SurvivorHolder : MonoBehaviour
     public TextMeshProUGUI combat_text;
     public Image hunger_indicator;
 
+    public Bunk bunk_occupied;
+
     // Start is called before the first frame update
     void Start()
     {
+        survivor = gameObject.GetComponent<Survivor>();
+        bunk_occupied = null;
         name_text.text = survivor.name;
         health_text.text = survivor.health.ToString();
         combat_text.text = survivor.combat_score.ToString();

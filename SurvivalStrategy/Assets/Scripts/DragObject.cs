@@ -7,15 +7,12 @@ public class DragObject : MonoBehaviour
     private Camera cam;
     private float distFromCamera;
     private Vector3 mouseOffset;
-    private Collider mCollider;
     private Plane objPlane;
-    private Vector3 objPoint;
-
+    public bool isDragging;
     void Start()
     {
         objPlane = new Plane(Vector3.up, gameObject.transform.position);
         cam = Camera.main;
-        mCollider = GetComponent<Collider>();
     }
 
     void Update()
@@ -25,6 +22,7 @@ public class DragObject : MonoBehaviour
 
     void OnMouseDown()
     {
+        isDragging = true;
         mouseOffset = gameObject.transform.position - GetMouseWorldPosition();
     }
 
@@ -38,12 +36,11 @@ public class DragObject : MonoBehaviour
     }
     void OnMouseDrag()
     {
-        mCollider.enabled = false;
         transform.position = GetMouseWorldPosition() + mouseOffset;
     }
 
     void OnMouseUp()
     {
-        mCollider.enabled = true;
+        isDragging = false;
     }
 }
