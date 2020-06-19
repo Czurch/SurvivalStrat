@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     int player_index;
-    private Compound compound;
+    public Compound compound;
     public bool isDead;
 
     public int water;
@@ -29,29 +29,27 @@ public class Player : MonoBehaviour
     //Assigns a Survivor to a bunk and adds him to the player's control
     public void AddSurvivor(Survivor s)
     {
-        survivors.Add(s);
-        Gamemanager.GM.UpdatePlayerText(this);
-
         if (compound.bunks_available.Count != 0)
         {
-          Bunk bunk = compound.bunks_available.Pop();
-          compound.bunks_occupied.Push(bunk);
-          //survivors.Add(holder.survivor);
-          //holder.controlling_player = this;
+            survivors.Add(s);
+            Gamemanager.GM.stateMachine.UpdatePlayerText(this);
+            compound.BindSurivorToBunk(s);
+            s.BindToPlayer(this);
         }
-        Gamemanager.GM.DS.PickCharacter();
+        Gamemanager.GM.stateMachine.DS.PickCharacter();
     }
 
     public void RemoveSurvivor(Survivor s)
     {
-        s.bunk.Unbind();
+        s.gameObject.GetComponent<SurvivorHolder>().bunk_occupied.Unbind();
         survivors.Remove(s);
+        Destroy(s.gameObject);
         if (survivors.Count <= 0)
         {
             isDead = true;
-            Gamemanager.GM.CheckGameStatus();
+            Gamemanager.GM.stateMachine.CheckGameStatus();
         }
-        Gamemanager.GM.UpdatePlayerText(this);
+        Gamemanager.GM.stateMachine.UpdatePlayerText(this);
     }
 
     //Uses water resources each round to keep characters alive
@@ -60,12 +58,12 @@ public class Player : MonoBehaviour
         for (int ix = 0; ix < survivors.Count; ix++)
         {
             Survivor[] list = survivors.ToArray<Survivor>();
-            if (list[ix].isHungry)
+            if (list[ix].isThirsty)
             {
                 if (water > 0)
                 {
                     water--;
-                    Debug.Log("feeding " + list[ix].name);
+                    //Debug.Log("hydrating " + list[ix].name);
                 }
                 else
                 {
@@ -91,7 +89,7 @@ public class Player : MonoBehaviour
                 if (food > 0)
                 {
                     food--;
-                    Debug.Log("feeding " + list[ix].name);
+                    //Debug.Log("feeding " + list[ix].name);
                 }
                 else
                 {

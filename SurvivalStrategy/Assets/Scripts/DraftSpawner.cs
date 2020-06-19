@@ -20,17 +20,17 @@ public class DraftSpawner : MonoBehaviour
 
     }
 
-    public void SpawnSurvivor()
+    public GameObject SpawnSurvivor()
     {
         //pick a random survivor from the roster
-        Debug.Log("Roster Count: " + roster.Count);
         int num = Random.Range(0, roster.Count - 1);
         int x = Random.Range(-3, 3);
         int y = Random.Range(-3, 3);
-        Instantiate(roster[num], new Vector3(x, 0, y), Quaternion.identity);
+        GameObject temp = Instantiate(roster[num], new Vector3(x, 0, y), Quaternion.identity);
         //when a survivor is spawned, they are removed from the list and never spawned back in during that game session
         roster.Remove(roster[num]);
         free_agents++;
+        return temp;
     }
 
     public void PickCharacter()

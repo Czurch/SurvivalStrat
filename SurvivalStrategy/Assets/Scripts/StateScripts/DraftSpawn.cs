@@ -12,10 +12,15 @@ public class DraftSpawn : State
 
     public override IEnumerator Start()
     {
-        for (int i = 0; i < player_count * starting_num_survivors; i++)
+        for (int i = 0; i < turnSystem.player_count * turnSystem.starting_num_survivors; i++)
         {
-            DS.SpawnSurvivor();
+            GameObject temp = turnSystem.DS.SpawnSurvivor();
+            turnSystem.free_agents.Push(temp);
         }
-        yield break;
+        yield return new WaitForSeconds(1f);
+        turnSystem.SetState(new CharacterDraft(turnSystem));
     }
 }
+
+
+

@@ -8,7 +8,6 @@ public class SurvivorSnapToObject : MonoBehaviour
     public SurvivorHolder holder;
     private BoxCollider box_collider;
     private GameObject slot_occupied;
-    private GameObject bunk_occupied;
     public TileSpace current_tile;
     public TileSpace old_tile;
     public Squad squad;
@@ -66,7 +65,7 @@ public class SurvivorSnapToObject : MonoBehaviour
     //When we collide with a snappable Object we set our position to them
     void OnTriggerEnter(Collider col)
     {
-        Debug.Log("Trigger Entered");
+        //Debug.Log("Trigger Entered");
         switch (col.gameObject.tag)
         {
             //IF TILESPACE
@@ -84,7 +83,7 @@ public class SurvivorSnapToObject : MonoBehaviour
                     //pair the object with the tile
                     Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
                     slot_occupied = col.gameObject;
-                    current_tile.Bind(holder.survivor.controlling_player);
+                    current_tile.Bind(holder);
                 }
                 else { Debug.Log("tile space for " + col.gameObject.name + " is occupied"); }
                 break;

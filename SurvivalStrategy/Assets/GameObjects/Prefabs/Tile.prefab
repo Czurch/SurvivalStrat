@@ -250,7 +250,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   player_occupants: []
-  slot_objects: []
+  slot_objects:
+  - {fileID: 1270157982111927812}
+  - {fileID: 7152155199733757105}
+  - {fileID: 8985242449775050507}
+  - {fileID: 875008654310111692}
 --- !u!1 &8985242449775050507
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using UnityEngine;
 public class TileSpace : MonoBehaviour
 {
     public bool isOccupied;
+    public bool isConflict;
     public List<Player> player_occupants;
     public GameObject[] slot_objects;
     private Stack<GameObject> slots;
@@ -13,7 +14,12 @@ public class TileSpace : MonoBehaviour
     void Start()
     {
         isOccupied = false;
+        isConflict = false;
         player_occupants = new List<Player>();
+        for (int i = 0; i < 4; i++)
+        {
+            slots.Push(slot_objects[i]);
+        }
     }
 
     // Update is called once per frame
@@ -22,10 +28,15 @@ public class TileSpace : MonoBehaviour
         
     }
 
-    public void Bind(Player p)
+    public void Bind(SurvivorHolder sh)
     {
+        if (isOccupied)
+        { 
+            isConflict = true;
+        }
         isOccupied = true;
-        player_occupants.Add(p);
+        player_occupants.Add(sh.survivor.controlling_player);
+        sh.gameObject.transform.position = slots.Pop().transform.position;
     }
 
     public void Unbind(Player p)

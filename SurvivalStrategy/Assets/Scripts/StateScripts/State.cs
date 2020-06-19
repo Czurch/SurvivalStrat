@@ -14,4 +14,9 @@ public abstract class State
     {
         yield break;
     }
+
+    public virtual IEnumerator EndGame()
+    {
+        yield break;
+    }
 }

@@ -46,4 +46,11 @@ public class Compound : MonoBehaviour
         bunkObj.transform.SetParent(gameObject.transform);
         bunks_available.Push(bunkObj.GetComponent<Bunk>());
     }
+
+    public void BindSurivorToBunk(Survivor s)
+    {
+        Bunk bunk = bunks_available.Pop();
+        s.gameObject.GetComponent<SurvivorHolder>().bunk_occupied = bunk;
+        bunks_occupied.Push(bunk);
+    }
 }
