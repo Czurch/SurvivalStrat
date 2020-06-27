@@ -8,8 +8,6 @@ public class SurvivorSnapToObject : MonoBehaviour
     public SurvivorHolder holder;
     private BoxCollider box_collider;
     private GameObject slot_occupied;
-    public TileSpace current_tile;
-    public TileSpace old_tile;
     public Squad squad;
     public float snapSpeed;
 
@@ -70,22 +68,17 @@ public class SurvivorSnapToObject : MonoBehaviour
         {
             //IF TILESPACE
             case "TileSpace":
-                current_tile = col.gameObject.GetComponent<TileSpace>();
+                holder.current_tile = col.gameObject.GetComponent<TileSpace>();
 
-                //make sure the tile isnt occupied
-                if (!current_tile.isOccupied)
+                //unpair from our previous object
+                if (slot_occupied != null)
                 {
-                    //unpair from our previous object
-                    if (slot_occupied != null)
-                    {
-                        Unbind();
-                    }
-                    //pair the object with the tile
-                    Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
-                    slot_occupied = col.gameObject;
-                    current_tile.Bind(holder);
+                  Unbind();
                 }
-                else { Debug.Log("tile space for " + col.gameObject.name + " is occupied"); }
+                //pair the object with the tile
+                Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
+                slot_occupied = col.gameObject;
+                holder.current_tile.Bind(holder);
                 break;
 
             case "Squad":
@@ -154,16 +147,14 @@ public class SurvivorSnapToObject : MonoBehaviour
         {
             case "TileSpace":
                 Debug.Log("Unbinding from previous tile");
-                old_tile = slot_occupied.GetComponent<TileSpace>();
-                old_tile.Unbind(holder.survivor.controlling_player);
-                slot_occupied = null;
-                //set slot_occupied to player bunk
+                holder.old_tile = slot_occupied.GetComponent<TileSpace>();
+                holder.old_tile.Unbind(holder);
+                slot_occupied = holder.bunk_occupied.gameObject;
                 break;
             case "Squad":
                 Debug.Log("Unbinding from squad");
                 squad.removeSurvivor(holder.survivor, slot_occupied);
-                slot_occupied = null;
-                //set slot_occupied back to player's bunk
+                slot_occupied = holder.bunk_occupied.gameObject;
                 break;
             case "Bunk":
                 holder.bunk_occupied.Unbind();
