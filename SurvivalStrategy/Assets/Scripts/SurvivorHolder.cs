@@ -16,6 +16,8 @@ public class SurvivorHolder : MonoBehaviour
     public Image hunger_indicator;
 
     public Bunk bunk_occupied;
+    public TileSpace current_tile;
+    public TileSpace old_tile;
 
     // Start is called before the first frame update
     void Start()

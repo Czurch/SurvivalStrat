@@ -7,6 +7,7 @@ public class TileSpace : MonoBehaviour
     public bool isOccupied;
     public bool isConflict;
     public List<Player> player_occupants;
+    public List<SurvivorHolder> survivor_occupants;
     public GameObject[] slot_objects;
     private Stack<GameObject> slots;
 
@@ -34,15 +35,26 @@ public class TileSpace : MonoBehaviour
         { 
             isConflict = true;
         }
-        isOccupied = true;
-        player_occupants.Add(sh.survivor.controlling_player);
-        sh.gameObject.transform.position = slots.Pop().transform.position;
+
+        //Check if the player binding already has a survivor on the tile
+        if(player_occupants.Contains(sh.survivor.controlling_player))
+        {
+          //we should put those survivors into a squad
+          //add that squad to the tile
+        }
+        else{
+          isOccupied = true;
+          player_occupants.Add(sh.survivor.controlling_player);
+          survivor_occupants.Add(sh);
+          sh.gameObject.transform.position = slots.Pop().transform.position;
+        }
     }
 
-    public void Unbind(Player p)
+    public void Unbind(SurvivorHolder sh)
     {
-        player_occupants.Remove(p);
-        if (player_occupants.Count == 0)
+        //player_occupants.Remove(p);
+        survivor_occupants.Remove(sh);
+        if (survivor_occupants.Count == 0)
         {
             isOccupied = false;
         }
