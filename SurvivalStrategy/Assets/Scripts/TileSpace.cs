@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class TileSpace : MonoBehaviour
 {
-    public bool isOccupied;
     public bool isConflict;
-    public List<Player> player_occupants;
-    public List<SurvivorHolder> survivor_occupants;
     public GameObject[] slot_objects;
+    public Squad[] squads;
     private Stack<GameObject> slots;
 
     // Start is called before the first frame update
     void Start()
     {
-        isOccupied = false;
         isConflict = false;
-        player_occupants = new List<Player>();
+        squads = new Squad[4];
         for (int i = 0; i < 4; i++)
         {
             slots.Push(slot_objects[i]);
@@ -31,32 +28,47 @@ public class TileSpace : MonoBehaviour
 
     public void Bind(SurvivorHolder sh)
     {
-        if (isOccupied)
-        { 
-            isConflict = true;
-        }
+        int px = sh.survivor.controlling_player.player_index;
+        squads[px].addSurvivor(sh.survivor);
+        sh.slot_occupied = slots.Pop();
 
-        //Check if the player binding already has a survivor on the tile
-        if(player_occupants.Contains(sh.survivor.controlling_player))
-        {
-          //we should put those survivors into a squad
-          //add that squad to the tile
-        }
-        else{
-          isOccupied = true;
-          player_occupants.Add(sh.survivor.controlling_player);
-          survivor_occupants.Add(sh);
-          sh.gameObject.transform.position = slots.Pop().transform.position;
-        }
+        isConflict = isOccupied(px);
     }
 
     public void Unbind(SurvivorHolder sh)
     {
-        //player_occupants.Remove(p);
-        survivor_occupants.Remove(sh);
-        if (survivor_occupants.Count == 0)
+        int px = sh.survivor.controlling_player.player_index;
+
+        squads[px].removeSurvivor(sh.survivor, sh.slot_occupied);
+    }
+
+    public Player ResolveConflict()
+    {
+        int max = 0;
+        Player p = new Player();
+        foreach (Squad s in squads)
         {
-            isOccupied = false;
+            if (s.getCombatScore() > max)
+                p = s.controlling_player;
         }
+
+        return p;
+    }
+
+    public bool isOccupied(int p_ix)
+    {
+        bool occupied = false;
+        for (int x = 0; x < 4; x++)
+        {
+            if (x != p_ix)
+            {
+                if (!squads[x].isEmpty())
+                {
+                    occupied = true;
+                    break;
+                }
+            }
+        }
+        return occupied;
     }
 }

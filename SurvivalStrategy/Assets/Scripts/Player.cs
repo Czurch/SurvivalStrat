@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    int player_index;
+    public int player_index;
     public Compound compound;
     public bool isDead;
 

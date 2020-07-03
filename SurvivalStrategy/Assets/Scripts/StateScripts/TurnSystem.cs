@@ -24,6 +24,10 @@ public class TurnSystem : StateMachine
         gameOver = false;
         free_agents = new Stack<GameObject>();
         SetState(new DraftSpawn(this));
+        foreach(Player p in players)
+        {
+            p.player_index = Array.IndexOf(players, p);        
+        }
     }
 
     // Update is called once per frame

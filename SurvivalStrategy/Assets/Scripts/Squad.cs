@@ -5,7 +5,7 @@ using UnityEngine;
 public class Squad : MonoBehaviour
 {
     public int max_squad_members;
-    private Player controlling_player;
+    public  Player controlling_player;
     List<Survivor> survivors;
     public GameObject[] slot_object;
     private Stack<GameObject> survivor_slot;
@@ -78,5 +78,10 @@ public class Squad : MonoBehaviour
     public Player getPlayer()
     {
         return controlling_player;
+    }
+
+    public bool isEmpty()
+    {
+        return (survivors.Count == 0);
     }
 }

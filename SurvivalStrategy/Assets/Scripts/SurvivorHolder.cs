@@ -15,6 +15,7 @@ public class SurvivorHolder : MonoBehaviour
     public TextMeshProUGUI combat_text;
     public Image hunger_indicator;
 
+    public GameObject slot_occupied;
     public Bunk bunk_occupied;
     public TileSpace current_tile;
     public TileSpace old_tile;

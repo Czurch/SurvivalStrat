@@ -7,7 +7,6 @@ public class SurvivorSnapToObject : MonoBehaviour
 {
     public SurvivorHolder holder;
     private BoxCollider box_collider;
-    private GameObject slot_occupied;
     public Squad squad;
     public float snapSpeed;
 
@@ -27,9 +26,9 @@ public class SurvivorSnapToObject : MonoBehaviour
     {
         if (!drag.isDragging)
         {
-            if (slot_occupied != null)
+            if (holder.slot_occupied != null)
             {
-                Vector3 tile_pos = slot_occupied.transform.position;
+                Vector3 tile_pos = holder.slot_occupied.transform.position;
                 tile_pos.y = 0.4f;
                 if (moveRoutine == null)
                 {   
@@ -71,13 +70,13 @@ public class SurvivorSnapToObject : MonoBehaviour
                 holder.current_tile = col.gameObject.GetComponent<TileSpace>();
 
                 //unpair from our previous object
-                if (slot_occupied != null)
+                if (holder.slot_occupied != null)
                 {
                   Unbind();
                 }
                 //pair the object with the tile
                 Debug.Log(gameObject.name + " snapping to " + col.gameObject.name);
-                slot_occupied = col.gameObject;
+                //holder.slot_occupied = col.gameObject;
                 holder.current_tile.Bind(holder);
                 break;
 
@@ -85,22 +84,22 @@ public class SurvivorSnapToObject : MonoBehaviour
                 GameObject temp;        //holds our slot_occupied if we cant join the squad
                 squad = col.gameObject.GetComponent<Squad>();
                 Debug.Log("we are triggering on " + col.gameObject.name);
-                temp = slot_occupied;
+                temp = holder.slot_occupied;
 
-                if (slot_occupied != null)
+                if (holder.slot_occupied != null)
                 {
                     break;
                 }
 
-                slot_occupied = squad.addSurvivor(holder.survivor);
-                if (slot_occupied != null)
+                holder.slot_occupied = squad.addSurvivor(holder.survivor);
+                if (holder.slot_occupied != null)
                 {
                     Debug.Log("slot_occupied was not null");
                 }
                 else
                 {
                     //we didnt return a spot for the survivor, squad is full
-                    slot_occupied = temp;
+                    holder.slot_occupied = temp;
                 }
                 break;
 
@@ -143,24 +142,24 @@ public class SurvivorSnapToObject : MonoBehaviour
 
     void Unbind()
     {
-        switch (slot_occupied.tag)
+        switch (holder.slot_occupied.tag)
         {
             case "TileSpace":
                 Debug.Log("Unbinding from previous tile");
-                holder.old_tile = slot_occupied.GetComponent<TileSpace>();
+                holder.old_tile = holder.slot_occupied.GetComponent<TileSpace>();
                 holder.old_tile.Unbind(holder);
-                slot_occupied = holder.bunk_occupied.gameObject;
+                holder.slot_occupied = holder.bunk_occupied.gameObject;
                 break;
             case "Squad":
                 Debug.Log("Unbinding from squad");
-                squad.removeSurvivor(holder.survivor, slot_occupied);
-                slot_occupied = holder.bunk_occupied.gameObject;
+                squad.removeSurvivor(holder.survivor, holder.slot_occupied);
+                holder.slot_occupied = holder.bunk_occupied.gameObject;
                 break;
             case "Bunk":
                 holder.bunk_occupied.Unbind();
               break;
             default:
-                Debug.Log(slot_occupied.tag);
+                Debug.Log(holder.slot_occupied.tag);
                 break;
         }
     }
