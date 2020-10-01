@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    public Sprite image;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +15,16 @@ public class Item : MonoBehaviour
     void Update()
     {
         
+    }
+
+    // Is called when the object is picked up
+    void passiveEffect()
+    { 
+    
+    }
+
+    // Is called when the object is being used
+    void activeEffect()
+    { 
     }
 }

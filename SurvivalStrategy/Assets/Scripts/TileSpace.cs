@@ -1,23 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class TileSpace : MonoBehaviour
 {
     public bool isConflict;
-    public GameObject[] slot_objects;
     public Squad[] squads;
-    private Stack<GameObject> slots;
 
     // Start is called before the first frame update
     void Start()
     {
         isConflict = false;
-        squads = new Squad[4];
-        for (int i = 0; i < 4; i++)
-        {
-            slots.Push(slot_objects[i]);
-        }
     }
 
     // Update is called once per frame
@@ -29,8 +23,12 @@ public class TileSpace : MonoBehaviour
     public void Bind(SurvivorHolder sh)
     {
         int px = sh.survivor.controlling_player.player_index;
-        squads[px].addSurvivor(sh.survivor);
-        sh.slot_occupied = slots.Pop();
+        if (squads[px].controlling_player == null)
+        {
+            squads[px].controlling_player = sh.survivor.controlling_player;
+        }
+            
+        sh.slot_occupied = squads[px].addSurvivor(sh.survivor);
 
         isConflict = isOccupied(px);
     }
@@ -38,8 +36,8 @@ public class TileSpace : MonoBehaviour
     public void Unbind(SurvivorHolder sh)
     {
         int px = sh.survivor.controlling_player.player_index;
-
         squads[px].removeSurvivor(sh.survivor, sh.slot_occupied);
+        isConflict = checkConflict();
     }
 
     public Player ResolveConflict()
@@ -53,6 +51,12 @@ public class TileSpace : MonoBehaviour
         }
 
         return p;
+    }
+
+    // Spawns items based on the type of tile
+    public void SpawnLoot()
+    {
+    
     }
 
     public bool isOccupied(int p_ix)
@@ -70,5 +74,31 @@ public class TileSpace : MonoBehaviour
             }
         }
         return occupied;
+    }
+
+    public bool checkConflict()
+    {
+        int occupied = 0;
+        for (int x = 0; x < 4; x++)
+        {
+            if (!(squads[x].isEmpty()))
+            {
+                occupied++;
+            }
+        }
+        return (occupied > 1);
+    }
+
+    public bool hasOnlyOnePlayer()
+    {
+        int occupied = 0;
+        for (int x = 0; x < 4; x++)
+        {
+            if (!(squads[x].isEmpty()))
+            {
+                occupied++;
+            }
+        }
+        return (occupied == 1);
     }
 }

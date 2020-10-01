@@ -495,9 +495,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76297eac758d3e4fad16c0cad731ec0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardSizeX: 0
-  boardSizeY: 0
-  tileOffset: 2.5
+  boardSizeX: 3
+  boardSizeY: 3
+  tileOffset: 6
   tile: {fileID: 8952284254148484725, guid: 28ccb39d6a73814438ea08041f6893d5, type: 3}
 --- !u!4 &190248628
 Transform:
@@ -507,7 +507,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 190248626}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -5, y: 0, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

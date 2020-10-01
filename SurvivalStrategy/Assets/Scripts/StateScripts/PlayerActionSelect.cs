@@ -10,7 +10,7 @@ internal class PlayerActionSelect : State
     public override IEnumerator Start()
     {
         turnSystem.Titletext.text = "Action Select Phase";
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(5.0f);
         //start a timer for 30 seconds
         //wait for all players to be ready or time to run out
 

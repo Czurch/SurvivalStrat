@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Squad : MonoBehaviour
 {
-    public int max_squad_members;
+    private int max_squad_members;
     public  Player controlling_player;
     List<Survivor> survivors;
     public GameObject[] slot_object;
@@ -15,8 +15,7 @@ public class Squad : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        max_squad_members = 3;
-        slot_object = new GameObject[4];
+        max_squad_members = 4;
         survivors = new List<Survivor>();
         survivor_slot = new Stack<GameObject>();
         survivor_slot.Push(slot_object[0]);

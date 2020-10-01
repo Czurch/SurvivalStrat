@@ -146,7 +146,7 @@ public class SurvivorSnapToObject : MonoBehaviour
         {
             case "TileSpace":
                 Debug.Log("Unbinding from previous tile");
-                holder.old_tile = holder.slot_occupied.GetComponent<TileSpace>();
+                holder.old_tile = holder.current_tile.GetComponent<TileSpace>();
                 holder.old_tile.Unbind(holder);
                 holder.slot_occupied = holder.bunk_occupied.gameObject;
                 break;
@@ -168,11 +168,11 @@ public class SurvivorSnapToObject : MonoBehaviour
     {
         while (gameObject.transform.position != moveTo)
         {
-            box_collider.enabled = false;
+            //box_collider.enabled = false;
             gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, moveTo, Time.deltaTime * snapSpeed);
             yield return null;
         }
-        box_collider.enabled = true;
+        //box_collider.enabled = true;
         yield return new WaitForSeconds(0.1f);
     }
 }
