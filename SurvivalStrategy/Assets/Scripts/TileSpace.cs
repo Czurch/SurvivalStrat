@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class TileSpace : MonoBehaviour
 {
+    public string title;
     public bool isConflict;
     public Squad[] squads;
+    public Item[] itemList;
 
     // Start is called before the first frame update
     void Start()
